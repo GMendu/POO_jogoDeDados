@@ -62,43 +62,55 @@ namespace jogoDeDados
 
                 while (true)
                 {
-                    Console.WriteLine("qual a aposta da vez? todos os jogadores irão apostar o mesmo valor");
-                    aposta = double.Parse(Console.ReadLine()) * 2;
-                    banco1 -= aposta / 2;
-                    banco2 -= aposta / 2;
-
-                    valor.Dado(jogador1);//rodar dados do jogador;
-                    soma1 = valor.Soma;
-
-                    valor.Perda(soma1, aposta, banco2, banco1, jogador1, jogador2);//verificação de derrota--  dados do perdedor / aposta / banco ganhador / banco perdedor / nome ganhador / nome perdedor
-                    if (valor.Fim == 1)
+                Rodada:
                     {
-                        break;
+                        Console.WriteLine("qual a aposta da vez? todos os jogadores irão apostar o mesmo valor");
+                        aposta = double.Parse(Console.ReadLine()) * 2;
+                        banco1 -= aposta / 2;
+                        banco2 -= aposta / 2;
                     }
-
-                    valor.Dado(jogador2);//rodar dados do jogador;
-                    soma2 = valor.Soma;
-
-                    valor.Perda(soma2, aposta, banco1, banco2, jogador2, jogador1);//verificação de derrota--  dados do perdedor / aposta / banco ganhador / banco perdedor / nome ganhador / nome perdedor
-                Joguin:
+                Joguin: 
                     {
+
+                        valor.Dado(jogador1);//rodar dados do jogador;
+                        soma1 = valor.Soma;
+
+                        valor.Perda(soma1, aposta, banco2, banco1, jogador1, jogador2);//verificação de derrota--  dados do perdedor / aposta / banco ganhador / banco perdedor / nome ganhador / nome perdedor
+                        if (valor.Fim == 1)
+                        {
+                            goto Fim;
+                        } else if (valor.Rodada == 1)
+                        {
+                            goto Rodada;
+                        }
+
+                        valor.Dado(jogador2);//rodar dados do jogador;
+                        soma2 = valor.Soma;
+
+                        valor.Perda(soma2, aposta, banco1, banco2, jogador2, jogador1);//verificação de derrota--  dados do perdedor / aposta / banco ganhador / banco perdedor / nome ganhador / nome perdedor
+                        if (valor.Fim == 1)
+                        {
+                            goto Fim;
+                        }
+                        else if (valor.Rodada == 1)
+                        {
+                            goto Rodada;
+                        }
+
                         if (soma1 > soma2)
                         {
                             banco1 += aposta;
+                            Console.WriteLine("O jogador {0} ganhou a rodada, ganhando {1} para sua carteira\n{0} - {2} reais\n{3} - {4} reais", jogador1, aposta, banco1, jogador2, banco2);
                         }
                         else if (soma1 < soma2)
                         {
                             banco2 += aposta;
+                            Console.WriteLine("O jogador {0} ganhou a rodada, ganhando {1} para sua carteira\n{0} - {4} reais\n{3} - {2} reais", jogador2, aposta, banco1, jogador1, banco2);
                         }
                         else
                         {
                             Console.WriteLine("os dados deram iguais, jogue novamente");
                             goto Joguin;
-                        }
-
-                        if (valor.Fim == 1)
-                        {
-                            break;
                         }
                         if (banco1 <= 0 || banco2 <= 0)
                         {
@@ -107,11 +119,11 @@ namespace jogoDeDados
                             break;
                         }
                     }
+                }
                 Fim:
-                    {
-                        Console.WriteLine("fim de jogo");
-                        Console.ReadKey();
-                    }
+                {
+                    Console.WriteLine("fim de jogo");
+                    Console.ReadKey();
                 }
             }
         }
